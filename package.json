@@ -19,8 +19,19 @@
   "homepage": "https://github.com/Kimijeep/HimajinImpact#readme",
   "keywords": [],
   "dependencies": {
+    "@discordjs/opus": "^0.8.0",
+    "@discordjs/voice": "^0.14.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
     "discord.js": "^14.7.1",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "ejs": "~2.6.1",
+    "express": "^4.18.2",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "tweetnacl": "^1.0.3",
+    "twitter": "^1.7.1",
+    "ytdl-core": "^4.11.2"
   },
   "devDependencies": {
     "eslint": "^8.32.0"
