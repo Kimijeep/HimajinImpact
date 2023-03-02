@@ -1,0 +1,104 @@
+const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ComponentType } = require('discord.js');
+
+const invitetype = new ActionRowBuilder()
+	.setComponents(
+		new ButtonBuilder()
+			.setCustomId('temporary_invite')
+			.setLabel('一時的な招待')
+			.setStyle(ButtonStyle.Primary),
+		new ButtonBuilder()
+			.setCustomId('Formal_invite')
+			.setLabel('正式な招待')
+			.setStyle(ButtonStyle.Primary),
+	);
+
+const yorn = new ActionRowBuilder()
+	.setComponents(
+		new ButtonBuilder()
+			.setCustomId('yes')
+			.setLabel('はい')
+			.setStyle(ButtonStyle.Primary),
+		new ButtonBuilder()
+			.setCustomId('not')
+			.setLabel('いいえ')
+			.setStyle(ButtonStyle.Primary),
+	);
+
+const option_premise = new EmbedBuilder()
+	.setColor(0x0099FF)
+	.setTitle('あなたは以前に招待URLを作成しています。')
+	.setDescription('さらに作成しますか？');
+
+const option_1 = new EmbedBuilder()
+	.setColor(0x0099FF)
+	.setTitle('招待のオプションを指定してください\n')
+	.setDescription('一時的な招待か正式な招待か設定してください。\n`招待で参加したメンバーが24時間後にまだ役割を受け取っていない場合、自動的にキックされるようにするかどうか`');
+
+const option_2 = new EmbedBuilder()
+	.setColor(0x0099FF)
+	.setTitle('招待のオプションを指定してください\n')
+	.setDescription('招待の継続時間を指定してください。');
+
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('invite')
+		.setDescription('招待URLを発行します。'),
+	async execute(interaction) {
+
+
+		const invites = await interaction.guild.invites.fetch();
+		const inv = invites.map(invite => invite.inviter.id);
+		if (inv.includes(interaction.user.id)) {
+			const options_premise = await interaction.reply({
+				embeds: [option_premise],
+				components: [yorn],
+			});
+			const collector0 = options_premise.createMessageComponentCollector({ componentType: ComponentType.Button, time: 30000 });
+			collector0.on('collect', i => {
+				if (i.user.id !== interaction.user.id) return;
+				if (i.customId === 'yes') {
+					i.editreply({
+						content: '招待生成を続行します。',
+					});
+					option_1;
+				}
+				if (i.customId === 'not') {
+					i.editreply({
+						content: '招待生成をキャンセルしました。',
+					});
+					return;
+				}
+				else {
+					i.editreply({
+						content: '応答待機時間がタイムアウトしたため、招待生成を終了します。',
+					});
+					return;
+				}
+			});
+		}
+
+		const options_1 = await interaction.reply({
+			embeds: [option_1],
+			components: [invitetype],
+		});
+
+		const collector = options_1.createMessageComponentCollector({ componentType: ComponentType.Button, time: 30000 });
+
+		collector.on('collect', i => {
+			if (i.user.id !== interaction.user.id) return;
+			if (i.customId === 'temporary_invite') {
+				i.reply({
+					embeds: [option_2],
+				});
+			}
+			else {
+				i.reply({
+					content: '応答待機時間がタイムアウトしたため、招待生成を終了します。',
+				});
+				return;
+			}
+		});
+		// const invite = await interaction.channel.createInvite();
+		// interaction.reply(invite.url);
+	},
+};
