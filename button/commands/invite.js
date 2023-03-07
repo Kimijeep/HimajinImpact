@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ComponentType } = require('discord.js');
-const invite_a = require('./invite_a');
 
 // const invitetype = new ActionRowBuilder()
 // 	.setComponents(
@@ -74,16 +73,16 @@ module.exports = {
 				return target.inviterId == interaction.user.id;
 			});
 			const invurl = inviters.map(invite => invite.url);
-			const option_premise = new EmbedBuilder()
+			const option_premises = new EmbedBuilder()
 				.setColor(0x0099FF)
 				.setTitle('あなたは以前に招待URLを作成しています。')
 				.setDescription('さらに作成しますか？')
 				.setFields({ name: '現在発行済みURL', value: `${invurl}` });
-			const options_premise = await interaction.reply({
-				embeds: [option_premise],
+			const options_premises = await interaction.reply({
+				embeds: [option_premises],
 				components: [yorn],
 			});
-			const collector = options_premise.createMessageComponentCollector({ componentType: ComponentType.Button, time: 30000 });
+			const collector = options_premises.createMessageComponentCollector({ componentType: ComponentType.Button, time: 30000 });
 			collector.on('collect', i => {
 				if (i.user.id === interaction.user.id) return;
 				if (i.customId === 'not') {
@@ -93,7 +92,7 @@ module.exports = {
 					return;
 				}
 				else {
-					i.reply({
+					i.followUp({
 						content: '応答待機時間がタイムアウトしたため、招待生成を終了します。',
 						ephemeral: true,
 					});
@@ -101,12 +100,8 @@ module.exports = {
 			});
 		}
 		else {
-			const button = interaction.client.b_commands.get(invite_a);
+			const button = require('./invite_a');
 
-			if (!button) {
-				console.error(`No command matching ${interaction.customId} was found.`);
-				return;
-			}
 			try {
 				await button.execute(interaction);
 			}
