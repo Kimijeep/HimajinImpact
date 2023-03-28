@@ -12,7 +12,7 @@ module.exports = {
 
 		// r_messageの内容がない場合のログ
 		if (!r_message) {
-			console.log(`${message.author.username}#${message.author.discriminator} [${message.guild.name}] : ${message.content}`);
+			console.log(`${new Date().toLocaleString()}|[${message.author.username}#${message.author.discriminator}] [${message.guild.name}>${message.channel.name}] : ${message.content} ${message.attachments.map(attachment => attachment.url)}`);
 			return;
 		}
 

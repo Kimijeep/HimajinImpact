@@ -8,8 +8,8 @@ module.exports = {
 		storedBalances.forEach(b => client.currency.set(b.user_id, b));
 		client.user.setPresence({
 			activities: [{
-				name: 'ﾊﾞﾅﾅ',
-				type: ActivityType.Listening }],
+				name: 'No default engine was specified and no extension was provided.',
+				type: ActivityType.Playing }],
 			status: 'dnd',
 		});
 		console.log(`Ready! Logged in as ${client.user.tag}`);
